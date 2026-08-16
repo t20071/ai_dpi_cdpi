@@ -404,6 +404,4 @@ dpi_agent_project/
 
 ---
 
-## License
 
-This prototype is provided for educational and demonstration purposes.
