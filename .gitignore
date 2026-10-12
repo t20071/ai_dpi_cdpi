@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+
+# Virtual / conda environments (recreate locally, never commit)
+.venv/
+venv/
+env/
+CDPI_env/
+
+# Local configuration
+.env
+
+# Everything the app writes at run time (database, audit logs, eval reports)
+data/runtime/
+
+# Office lock files and OS clutter
+~$*
+.DS_Store
+Thumbs.db
