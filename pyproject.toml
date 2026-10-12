@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dpi-agent"
+version = "0.3.0"
+description = "Sovereign DPI-AI Public Agent: an LLM agent (local Ollama or Groq) governed by consent, policy and risk gates"
+readme = "README.md"
+requires-python = ">=3.11"
+# The agent itself uses only the Python standard library.
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+report = ["python-docx>=1.1"]        # only for scripts/build_docx_report.py
+screenshots = ["playwright>=1.45"]    # only for scripts/take_screenshots.py
+
+[project.scripts]
+dpi-agent = "dpi_agent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
+markers = [
+    "ollama: needs a running Ollama server with a chat model (skipped otherwise)",
+    "groq: calls the real Groq API with GROQ_API_KEY from .env (skipped otherwise)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests", "scripts", "api"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+ignore = ["E501"]  # long lines are left to the formatter
+
+[tool.ruff.lint.isort]
+known-first-party = ["dpi_agent"]
