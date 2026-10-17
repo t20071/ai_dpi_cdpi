@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en" data-font="0">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DPI Public Agent – AI-assisted farmer services (prototype)</title>
+  <meta name="description" content="Ask for a solar pump subsidy or a farm credit check in your own words. An AI reads the request; consent, rules and human officers decide. A prototype on synthetic data.">
+  <meta name="theme-color" content="#0a2240">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.5M12 17.4v.2"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.2"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5V5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 7.5h7M8.5 10.5h7M10 7.5c2.8 0 3.2 3 0 3H8.5l5 6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.3-7.5 9.5-4.3-1.2-7.5-4.9-7.5-9.5V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9.5L5 20v-4H4z"/><path d="M8 9.5h8M8 12.5h5"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 5h16l-6 7.5V19l-4-2v-4.5z"/></symbol>
+  <symbol id="i-id" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16.2c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14.5 10h4M14.5 13.5h3"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15.5" r="3.5"/><path d="M10.5 13L19 4.5M16 7.5l2.5 2.5M13.8 9.7l2 2"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M6.5 3h8l4 4v14h-12z"/><path d="M14.5 3v4h4M9.5 12h6M9.5 16h6"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 4v16M8 20h8M5 7.5h14"/><path d="M5 7.5L2.5 13h5zM19 7.5L16.5 13h5z"/></symbol>
+  <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 17a8 8 0 1 1 16 0"/><path d="M12 17l4.2-5"/><circle cx="12" cy="17" r="1"/></symbol>
+  <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10h14V9M10 13h4"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18.5h10a4 4 0 0 0 .4-8 5.6 5.6 0 0 0-10.8 1.4A3.4 3.4 0 0 0 7 18.5z"/></symbol>
+  <symbol id="i-laptop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="10" rx="1.5"/><path d="M3 19h18"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"/></symbol>
+  <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3A4 4 0 0 0 13 5.3l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-contrast" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" class="fill"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+<div class="visually-hidden" id="sr-status" role="status" aria-live="polite"></div>
+
+<div class="utility-bar">
+  <div class="container utility-inner">
+    <p class="utility-note"><strong class="tag tag--gold">Prototype</strong> Demonstration service on synthetic data. Not an official government website.</p>
+    <div class="utility-tools">
+      <div class="text-size" role="group" aria-label="Text size">
+        <button type="button" class="tool-btn" data-font-step="-1" aria-label="Decrease text size">A<span aria-hidden="true">−</span></button>
+        <button type="button" class="tool-btn" data-font-step="0" aria-label="Default text size">A</button>
+        <button type="button" class="tool-btn" data-font-step="1" aria-label="Increase text size">A<span aria-hidden="true">+</span></button>
+      </div>
+      <button type="button" class="tool-btn tool-btn--wide" id="contrast-toggle" aria-pressed="false">
+        <svg class="icon" aria-hidden="true"><use href="#i-contrast"/></svg> High contrast
+      </button>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="#home">
+      <img src="assets/logo.svg" alt="" width="52" height="52">
+      <span class="brand-text">
+        <span class="brand-title">DPI Public Agent</span>
+        <span class="brand-sub">AI-assisted farmer services, governed by consent</span>
+      </span>
+    </a>
+    <div class="header-status" id="header-status" role="status">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span id="header-status-text">Checking services…</span>
+    </div>
+    <button type="button" class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="primary-nav">
+      <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg> Menu
+    </button>
+  </div>
+  <nav class="primary-nav" id="primary-nav" aria-label="Main">
+    <div class="container">
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#ask">Ask the agent</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#transparency">Transparency</a></li>
+        <li><a href="#data">Open data</a></li>
+        <li><a href="#accessibility">Accessibility</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1">
+
+  <!-- ===================================================== HOME -->
+  <section class="view" id="view-home" aria-labelledby="home-title" data-title="Home">
+    <div class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Digital Public Infrastructure · AI public agent</p>
+          <h1 id="home-title" tabindex="-1">Farmer services, in your own words</h1>
+          <p class="lead">Ask for a solar pump subsidy or a farm credit check in English, Hindi or Hinglish. An AI reads your request; your consent, the published rules and, when in doubt, a human officer decide.</p>
+          <div class="hero-actions">
+            <a class="btn btn--gold btn--lg" href="#ask">Start a request <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <a class="btn btn--ghost-light btn--lg" href="#how">How it works</a>
+          </div>
+        </div>
+        <aside class="trust-card" aria-labelledby="trust-title">
+          <h2 id="trust-title" class="trust-title"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg> Your request is protected</h2>
+          <ul class="checklist">
+            <li><strong>Your consent decides</strong> which records are read, and for what purpose.</li>
+            <li><strong>AI never decides alone.</strong> It only reads your message; rules make the decision.</li>
+            <li><strong>Unsure cases go to an officer</strong>, never to a guess.</li>
+            <li><strong>Every step is recorded</strong> in a tamper-evident log you can inspect.</li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+
+    <div class="container">
+      <dl class="stats" aria-label="Service at a glance">
+        <div class="stat"><dt>Registry records</dt><dd id="stat-records">–</dd></div>
+        <div class="stat"><dt>AI options available</dt><dd id="stat-ai">–</dd></div>
+        <div class="stat"><dt>Decisions recorded</dt><dd id="stat-audit">–</dd></div>
+        <div class="stat"><dt>Confidence needed</dt><dd id="stat-threshold">–</dd></div>
+      </dl>
+
+      <section class="section" aria-labelledby="home-services-title">
+        <div class="section-head">
+          <h2 id="home-services-title">Services you can request</h2>
+          <a class="link-arrow" href="#services">All service details <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+        <div class="grid grid--2">
+          <article class="service-card">
+            <div class="service-icon service-icon--sun"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></div>
+            <h3>Solar pump subsidy</h3>
+            <p>Support to install a solar-powered irrigation pump on your farm.</p>
+            <ul class="meta-list">
+              <li><span>Who can apply</span> Farmers with an active identity and at least 2 acres of land</li>
+              <li><span>Data used, with your consent</span> Identity and land records</li>
+            </ul>
+            <button type="button" class="btn btn--primary" data-example="I am Suresh Kaur, ID 765-741-434. I want to apply for a solar pump subsidy.">Apply with the agent</button>
+          </article>
+          <article class="service-card">
+            <div class="service-icon service-icon--coin"><svg class="icon" aria-hidden="true"><use href="#i-coin"/></svg></div>
+            <h3>Farm credit check</h3>
+            <p>A first look at your eligibility for an agricultural loan. Always confirmed by an officer.</p>
+            <ul class="meta-list">
+              <li><span>Who can apply</span> Farmers with an active identity</li>
+              <li><span>Data used, with your consent</span> Identity and credit history</li>
+            </ul>
+            <button type="button" class="btn btn--primary" data-example="I am Anjali Iyer, ID 213-163-577. I want to assess my credit for an agricultural loan.">Check with the agent</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="demo-title">
+        <div class="section-head">
+          <h2 id="demo-title">Try a demo citizen</h2>
+          <p class="section-note">Three citizens from the synthetic dataset show each kind of outcome.</p>
+        </div>
+        <div class="grid grid--3">
+          <article class="demo-card">
+            <span class="tag tag--success">Approved</span>
+            <h3>Suresh Kaur</h3>
+            <p class="mono">ID 765-741-434</p>
+            <p>Active identity, consent for land data, 12.8 acres. The subsidy is approved and recorded.</p>
+            <button type="button" class="btn btn--secondary" data-example="I am Suresh Kaur, ID 765-741-434. I want to apply for a solar pump subsidy." data-provider="deterministic"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Run this example</button>
+          </article>
+          <article class="demo-card">
+            <span class="tag tag--info">Consent needed</span>
+            <h3>Anjali Iyer</h3>
+            <p class="mono">ID 213-163-577</p>
+            <p>Her consent covers land data only, so her credit history is never read.</p>
+            <button type="button" class="btn btn--secondary" data-example="I am Anjali Iyer, ID 213-163-577. I want to assess my credit for an agricultural loan." data-provider="deterministic"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Run this example</button>
+          </article>
+          <article class="demo-card">
+            <span class="tag tag--warn">Officer review</span>
+            <h3>Suresh Mishra</h3>
+            <p class="mono">ID 715-454-455</p>
+            <p>His identity is suspended, so the request goes to an officer instead of being decided by software.</p>
+            <button type="button" class="btn btn--secondary" data-example="I am Suresh Mishra, ID 715-454-455. I need help, I'm not sure how to apply for a solar pump subsidy." data-provider="deterministic"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Run this example</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="pillars-title">
+        <h2 id="pillars-title">Built to be trusted</h2>
+        <div class="grid grid--4 pillars">
+          <div class="pillar"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg><h3>Consent first</h3><p>DEPA-style consent: status, expiry, purpose, permission and signature are all checked.</p></div>
+          <div class="pillar"><svg class="icon" aria-hidden="true"><use href="#i-cpu"/></svg><h3>Two-key AI check</h3><p>The AI's reading must match independent rules before any record is opened.</p></div>
+          <div class="pillar"><svg class="icon" aria-hidden="true"><use href="#i-person"/></svg><h3>Human in the loop</h3><p>Low confidence, high impact or unclear requests go to an officer.</p></div>
+          <div class="pillar"><svg class="icon" aria-hidden="true"><use href="#i-link"/></svg><h3>Tamper-evident</h3><p>Each audit record is chained to the last, so edits can be detected.</p></div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===================================================== ASK -->
+  <section class="view" id="view-ask" aria-labelledby="ask-title" data-title="Ask the agent">
+    <div class="page-head">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb"><a href="#home">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Ask the agent</span></nav>
+        <h1 id="ask-title" tabindex="-1">Ask the agent</h1>
+        <p class="lead lead--dark">Describe what you need and include your national ID (for example <span class="mono">765-741-434</span>). You can write in English, Hindi or Hinglish.</p>
+      </div>
+    </div>
+
+    <div class="container ask-layout">
+      <div class="panel chat-panel">
+        <fieldset class="ai-picker" id="ai-picker">
+          <legend>Who reads your request?</legend>
+          <div class="ai-options">
+            <label class="ai-option" data-provider-option="deterministic">
+              <input type="radio" name="provider" value="deterministic">
+              <span class="ai-option-body">
+                <span class="ai-option-title"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg> Rules only</span>
+                <span class="ai-option-desc">No AI. Keyword rules, instant.</span>
+                <span class="ai-option-state" data-state></span>
+              </span>
+            </label>
+            <label class="ai-option" data-provider-option="ollama">
+              <input type="radio" name="provider" value="ollama">
+              <span class="ai-option-body">
+                <span class="ai-option-title"><svg class="icon" aria-hidden="true"><use href="#i-laptop"/></svg> Local AI</span>
+                <span class="ai-option-desc">Ollama on this computer. Nothing leaves it.</span>
+                <span class="ai-option-state" data-state></span>
+              </span>
+            </label>
+            <label class="ai-option" data-provider-option="groq">
+              <input type="radio" name="provider" value="groq">
+              <span class="ai-option-body">
+                <span class="ai-option-title"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg> Cloud AI</span>
+                <span class="ai-option-desc">Groq. Your message is sent to Groq.</span>
+                <span class="ai-option-state" data-state></span>
+              </span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="conversation" id="conversation" role="log" aria-live="polite" aria-label="Conversation">
+          <div class="msg msg--agent">
+            <div class="msg-avatar" aria-hidden="true"><svg class="icon"><use href="#i-chat"/></svg></div>
+            <div class="msg-bubble">
+              <p class="msg-author">Public Agent</p>
+              <p>Namaste! I can help you apply for a <strong>solar pump subsidy</strong> or check your <strong>farm credit</strong>. Tell me what you need and include your national ID.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="examples" aria-label="Example requests">
+          <span class="examples-label">Try:</span>
+          <button type="button" class="chip" data-example="I am Suresh Kaur, ID 765-741-434. I want to apply for a solar pump subsidy.">Solar subsidy</button>
+          <button type="button" class="chip" data-example="मेरी आईडी 765-741-434 है। मुझे सोलर पंप के लिए सब्सिडी चाहिए।" lang="hi">सोलर पंप (Hindi)</button>
+          <button type="button" class="chip" data-example="Mera ID 213-163-577 hai, mujhe kheti ke liye loan chahiye">Farm loan (Hinglish)</button>
+          <button type="button" class="chip" data-example="I need money for seeds and fertilizer this season. 765-741-434">Unclear request</button>
+          <button type="button" class="chip" data-example="I want to apply for a solar pump subsidy.">No ID</button>
+        </div>
+
+        <form class="composer" id="composer" novalidate>
+          <label for="query" class="composer-label">Your request</label>
+          <p class="hint" id="query-hint">Include your 9-digit national ID, written like 765-741-434.</p>
+          <div class="composer-row">
+            <textarea id="query" name="query" rows="3" maxlength="2000" aria-describedby="query-hint query-count" required></textarea>
+            <button type="submit" class="btn btn--primary btn--send" id="send-btn">
+              <span class="btn-label">Send</span>
+              <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+            </button>
+          </div>
+          <p class="hint hint--right" id="query-count" aria-live="off">0 / 2000</p>
+        </form>
+      </div>
+
+      <div class="ask-side">
+        <section class="panel" aria-labelledby="tracker-title">
+          <h2 id="tracker-title" class="panel-title">How your request is handled</h2>
+          <ol class="tracker" id="tracker">
+            <li data-stage="interpret"><span class="tracker-icon"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg></span><div><p class="tracker-name">Understand the request</p><p class="tracker-detail">The AI or rules read your message</p></div><span class="tracker-status">Waiting</span></li>
+            <li data-stage="triage"><span class="tracker-icon"><svg class="icon" aria-hidden="true"><use href="#i-filter"/></svg></span><div><p class="tracker-name">Safety checks</p><p class="tracker-detail">Your ID and the request type are double-checked</p></div><span class="tracker-status">Waiting</span></li>
+            <li data-stage="identity"><span class="tracker-icon"><svg class="icon" aria-hidden="true"><use href="#i-id"/></svg></span><div><p class="tracker-name">Verify identity</p><p class="tracker-detail">Your identity record must be active</p></div><span class="tracker-status">Waiting</span></li>
+            <li data-stage="consent"><span class="tracker-icon"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg></span><div><p class="tracker-name">Check your consent</p><p class="tracker-detail">Five consent gates must pass</p></div><span class="tracker-status">Waiting</span></li>
+            <li data-stage="records"><span class="tracker-icon"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg></span><div><p class="tracker-name">Fetch records</p><p class="tracker-detail">Only what your consent allows</p></div><span class="tracker-status">Waiting</span></li>
+            <li data-stage="policy"><span class="tracker-icon"><svg class="icon" aria-hidden="true"><use href="#i-scale"/></svg></span><div><p class="tracker-name">Apply the rules</p><p class="tracker-detail">Published eligibility policy</p></div><span class="tracker-status">Waiting</span></li>
+            <li data-stage="risk"><span class="tracker-icon"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg></span><div><p class="tracker-name">Risk review</p><p class="tracker-detail">Confidence and risk checks</p></div><span class="tracker-status">Waiting</span></li>
+            <li data-stage="record"><span class="tracker-icon"><svg class="icon" aria-hidden="true"><use href="#i-archive"/></svg></span><div><p class="tracker-name">Record the decision</p><p class="tracker-detail">Written to the records system and audit log</p></div><span class="tracker-status">Waiting</span></li>
+          </ol>
+        </section>
+
+        <section class="outcome" id="outcome" hidden aria-live="polite" aria-labelledby="outcome-title">
+          <div class="outcome-head">
+            <svg class="icon outcome-icon" aria-hidden="true"><use href="#i-info"/></svg>
+            <h2 id="outcome-title" class="outcome-title">Outcome</h2>
+          </div>
+          <p class="outcome-text" id="outcome-text"></p>
+          <dl class="outcome-facts" id="outcome-facts"></dl>
+          <button type="button" class="btn btn--link" id="outcome-details">See the full record</button>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== SERVICES -->
+  <section class="view" id="view-services" aria-labelledby="services-title" data-title="Services">
+    <div class="page-head">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb"><a href="#home">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Services</span></nav>
+        <h1 id="services-title" tabindex="-1">Services</h1>
+        <p class="lead lead--dark">What each service offers, who can apply, and exactly which of your records it uses.</p>
+      </div>
+    </div>
+    <div class="container stack">
+      <article class="panel service-detail" aria-labelledby="svc-solar">
+        <div class="service-detail-head">
+          <div class="service-icon service-icon--sun"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></div>
+          <div><h2 id="svc-solar">Solar pump subsidy</h2><p>Support to install a solar-powered irrigation pump.</p></div>
+        </div>
+        <div class="grid grid--3 facts-grid">
+          <div><h3>Who can apply</h3><ul><li>Identity status is active</li><li>At least <strong id="rule-acres">2.0</strong> acres of land on record</li></ul></div>
+          <div><h3>Consent needed</h3><ul><li>Permission: <span class="mono">agri_land:read</span></li><li>Purpose: Agricultural Support or Subsidy Screening</li></ul></div>
+          <div><h3>What happens</h3><ul><li>Approved requests are recorded with a transaction ID</li><li>Unclear or low-confidence requests go to an officer</li></ul></div>
+        </div>
+        <button type="button" class="btn btn--primary" data-example="I am Suresh Kaur, ID 765-741-434. I want to apply for a solar pump subsidy.">Apply with the agent</button>
+      </article>
+
+      <article class="panel service-detail" aria-labelledby="svc-credit">
+        <div class="service-detail-head">
+          <div class="service-icon service-icon--coin"><svg class="icon" aria-hidden="true"><use href="#i-coin"/></svg></div>
+          <div><h2 id="svc-credit">Farm credit check</h2><p>Decision support for agricultural loans. Never a binding credit decision.</p></div>
+        </div>
+        <div class="grid grid--3 facts-grid">
+          <div><h3>Who can apply</h3><ul><li>Identity status is active</li><li>Credit score of at least <strong id="rule-score">500</strong> for a medium or low risk tier</li></ul></div>
+          <div><h3>Consent needed</h3><ul><li>Permission: <span class="mono">mifos_credit:read</span></li><li>Purpose: Credit Assessment, Micro-Loan Processing or Subsidy Screening</li></ul></div>
+          <div><h3>What happens</h3><ul><li>Credit is a high-impact decision, so it needs higher confidence</li><li>High-risk or uncertain cases always go to an officer</li></ul></div>
+        </div>
+        <button type="button" class="btn btn--primary" data-example="I am Anjali Iyer, ID 213-163-577. I want to assess my credit for an agricultural loan.">Check with the agent</button>
+      </article>
+
+      <section class="panel" aria-labelledby="faq-title">
+        <h2 id="faq-title">Common questions</h2>
+        <details class="faq"><summary>Does an AI decide whether I get the subsidy?</summary><p>No. The AI only works out which service you are asking for and which ID you gave. Eligibility is decided by published rules, and anything uncertain goes to an officer.</p></details>
+        <details class="faq"><summary>What happens if I have not given consent?</summary><p>Your records are not read at all. You are told which permission is missing so you can grant it in your consent manager and try again.</p></details>
+        <details class="faq"><summary>Can I write in Hindi?</summary><p>Yes. Requests in Hindi and Hinglish are understood. The website itself is in English for now.</p></details>
+        <details class="faq"><summary>Is this a real government service?</summary><p>No. This is a prototype that uses synthetic data to show how AI can be used safely on top of digital public infrastructure.</p></details>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===================================================== HOW IT WORKS -->
+  <section class="view" id="view-how" aria-labelledby="how-title" data-title="How it works">
+    <div class="page-head">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb"><a href="#home">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">How it works</span></nav>
+        <h1 id="how-title" tabindex="-1">How it works</h1>
+        <p class="lead lead--dark">The AI proposes. The workflow decides. A human handles anything uncertain.</p>
+      </div>
+    </div>
+    <div class="container stack">
+      <section class="panel" aria-labelledby="pipeline-title">
+        <h2 id="pipeline-title">From your words to a decision</h2>
+        <ol class="steps">
+          <li><h3>Understand</h3><p>A language model, or the keyword rules, reads your message and fills in a fixed form: which service, which ID, and how sure it is. It cannot do anything else.</p></li>
+          <li><h3>Safety checks</h3><p>The ID must be one you actually typed. Independent keyword rules must agree with the AI about the service. Otherwise an officer takes over, before any record is opened.</p></li>
+          <li><h3>Identity and consent</h3><p>Your identity must be active. Your consent must be active, unexpired, for this purpose, include the right permission and carry a valid signature.</p></li>
+          <li><h3>Rules and risk</h3><p>Published eligibility rules are applied. A risk gate checks the AI's confidence (0.80, or 0.90 for credit) and looks for warning signs.</p></li>
+          <li><h3>Record</h3><p>Approved requests are written to the existing records system without changing it. Every step, approved or not, goes into a tamper-evident audit log.</p></li>
+        </ol>
+      </section>
+
+      <section class="panel" aria-labelledby="ai-options-title">
+        <h2 id="ai-options-title">Choosing who reads your request</h2>
+        <div class="table-wrap" role="region" aria-labelledby="ai-options-title" tabindex="0">
+          <table class="table">
+            <thead><tr><th scope="col">Option</th><th scope="col">Where it runs</th><th scope="col">Sent outside this service</th><th scope="col">Best for</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Rules only</th><td>This service's server</td><td>Nothing</td><td>Instant, predictable answers; offline use</td></tr>
+              <tr><th scope="row">Local AI (Ollama)</th><td>The computer running this service</td><td>Nothing</td><td>Data sovereignty: small language models (SLMs) such as Llama 3.2</td></tr>
+              <tr><th scope="row">Cloud AI (Groq)</th><td>Groq's servers</td><td>Your message only, never your records</td><td>Hosted websites and stronger models such as GPT-OSS</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="grid grid--2">
+        <section class="panel" aria-labelledby="gates-title">
+          <h2 id="gates-title">The five consent gates</h2>
+          <ol class="numbered">
+            <li><strong>Status</strong>: only active consent counts; revoked or expired consent is refused.</li>
+            <li><strong>Expiry</strong>: the consent must still be valid today.</li>
+            <li><strong>Permission</strong>: it must allow the exact data needed.</li>
+            <li><strong>Purpose</strong>: it must have been given for this kind of service.</li>
+            <li><strong>Signature</strong>: the record must not have been edited.</li>
+          </ol>
+        </section>
+        <section class="panel" aria-labelledby="officer-title">
+          <h2 id="officer-title">When an officer steps in</h2>
+          <ul class="bullets">
+            <li>The AI and the rules disagree, or neither is sure.</li>
+            <li>The request names more than one ID, or an ID you did not type.</li>
+            <li>The identity is suspended.</li>
+            <li>The AI's confidence is below the threshold.</li>
+            <li>A credit check falls in the high-risk tier.</li>
+          </ul>
+          <p class="note">This page describes a prototype. Thresholds are example values, not real policy, and nothing here is NIST certification.</p>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== TRANSPARENCY -->
+  <section class="view" id="view-transparency" aria-labelledby="transparency-title" data-title="Transparency">
+    <div class="page-head">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb"><a href="#home">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Transparency</span></nav>
+        <h1 id="transparency-title" tabindex="-1">Transparency log</h1>
+        <p class="lead lead--dark">Every request, consent decision and officer referral is recorded. Each record is chained to the one before it, so any edit or deletion can be detected.</p>
+      </div>
+    </div>
+    <div class="container stack">
+      <div class="panel integrity">
+        <div>
+          <h2 class="panel-title">Integrity check</h2>
+          <p id="integrity-text" class="integrity-text">Check that no record has been edited, removed or reordered.</p>
+        </div>
+        <button type="button" class="btn btn--secondary" id="verify-btn"><svg class="icon" aria-hidden="true"><use href="#i-link"/></svg> Verify all logs</button>
+      </div>
+
+      <div class="panel">
+        <div class="tabs" role="tablist" aria-label="Audit logs" id="audit-tabs">
+          <button type="button" role="tab" id="tab-workflow" aria-controls="audit-panel" aria-selected="true" data-audit="workflow">Requests</button>
+          <button type="button" role="tab" id="tab-consent" aria-controls="audit-panel" aria-selected="false" tabindex="-1" data-audit="consent">Consent decisions</button>
+          <button type="button" role="tab" id="tab-escalations" aria-controls="audit-panel" aria-selected="false" tabindex="-1" data-audit="escalations">Officer referrals</button>
+        </div>
+        <div id="audit-panel" role="tabpanel" aria-labelledby="tab-workflow">
+          <div class="toolbar">
+            <label for="audit-filter" class="visually-hidden">Filter records</label>
+            <div class="search-field">
+              <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+              <input type="search" id="audit-filter" placeholder="Filter by ID, status, reason…">
+            </div>
+            <p class="toolbar-note" id="audit-count" aria-live="polite"></p>
+          </div>
+          <div class="table-wrap" role="region" aria-label="Audit records" tabindex="0">
+            <table class="table" id="audit-table"><thead></thead><tbody></tbody></table>
+          </div>
+          <p class="note" id="audit-note"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== OPEN DATA -->
+  <section class="view" id="view-data" aria-labelledby="data-title" data-title="Open data">
+    <div class="page-head">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb"><a href="#home">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Open data</span></nav>
+        <h1 id="data-title" tabindex="-1">Open data</h1>
+        <p class="lead lead--dark">Browse the five synthetic registries the service runs on. Phone numbers are masked.</p>
+      </div>
+    </div>
+    <div class="container stack">
+      <div class="panel">
+        <div class="tabs" role="tablist" aria-label="Registries" id="registry-tabs">
+          <button type="button" role="tab" id="reg-identity" aria-controls="registry-panel" aria-selected="true" data-registry="identity">Identity</button>
+          <button type="button" role="tab" id="reg-agriculture" aria-controls="registry-panel" aria-selected="false" tabindex="-1" data-registry="agriculture">Land</button>
+          <button type="button" role="tab" id="reg-credit" aria-controls="registry-panel" aria-selected="false" tabindex="-1" data-registry="credit">Credit</button>
+          <button type="button" role="tab" id="reg-consent" aria-controls="registry-panel" aria-selected="false" tabindex="-1" data-registry="consent">Consent</button>
+          <button type="button" role="tab" id="reg-legacy" aria-controls="registry-panel" aria-selected="false" tabindex="-1" data-registry="legacy">Transactions</button>
+        </div>
+        <div id="registry-panel" role="tabpanel" aria-labelledby="reg-identity">
+          <form class="toolbar" id="registry-search">
+            <label for="registry-q" class="visually-hidden">Search this registry</label>
+            <div class="search-field">
+              <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+              <input type="search" id="registry-q" maxlength="100" placeholder="Search by ID, name, district, status…">
+            </div>
+            <button type="submit" class="btn btn--secondary">Search</button>
+            <p class="toolbar-note" id="registry-count" aria-live="polite"></p>
+          </form>
+          <div class="table-wrap" role="region" aria-label="Registry records" tabindex="0">
+            <table class="table" id="registry-table"><thead></thead><tbody></tbody></table>
+          </div>
+          <div class="pager">
+            <button type="button" class="btn btn--secondary" id="registry-prev">Previous</button>
+            <span id="registry-page" aria-live="polite"></span>
+            <button type="button" class="btn btn--secondary" id="registry-next">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== ACCESSIBILITY -->
+  <section class="view" id="view-accessibility" aria-labelledby="a11y-title" data-title="Accessibility">
+    <div class="page-head">
+      <div class="container">
+        <nav aria-label="Breadcrumb" class="breadcrumb"><a href="#home">Home</a> <span aria-hidden="true">›</span> <span aria-current="page">Accessibility</span></nav>
+        <h1 id="a11y-title" tabindex="-1">Accessibility statement</h1>
+        <p class="lead lead--dark">This service aims to meet the Web Content Accessibility Guidelines (WCAG) 2.1 at level AA.</p>
+      </div>
+    </div>
+    <div class="container stack narrow">
+      <section class="panel">
+        <h2>What you can do</h2>
+        <ul class="bullets">
+          <li>Use every feature with a keyboard. A "Skip to main content" link is the first thing on the page.</li>
+          <li>Make text larger or smaller with the <strong>A−&nbsp;A&nbsp;A+</strong> buttons at the top. Zoom up to 400% also works.</li>
+          <li>Switch to <strong>high contrast</strong> colours with the button at the top.</li>
+          <li>Use a screen reader: pages have landmarks and headings, and new answers are announced.</li>
+          <li>Reduce motion: animations stop if your device asks for reduced motion.</li>
+          <li>Write requests in English, Hindi or Hinglish.</li>
+        </ul>
+      </section>
+      <section class="panel">
+        <h2>Known limitations</h2>
+        <ul class="bullets">
+          <li>The website text is in English only.</li>
+          <li>Wide tables scroll sideways on small screens.</li>
+        </ul>
+      </section>
+      <section class="panel">
+        <h2>Privacy</h2>
+        <p>The site loads no third-party scripts, fonts or trackers. With "Rules only" or "Local AI", nothing you type leaves the server you are using. With "Cloud AI", your message is sent to Groq to be interpreted; your records never are.</p>
+      </section>
+      <section class="panel">
+        <h2>Feedback</h2>
+        <p>Found a problem? <a href="https://github.com/t20071/ai_dpi_cdpi/issues" rel="noopener">Open an issue on GitHub</a>.</p>
+      </section>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <p class="footer-brand"><img src="assets/logo.svg" alt="" width="36" height="36"> DPI Public Agent</p>
+      <p>A prototype showing how AI can serve citizens on top of digital public infrastructure, with consent, rules and people in control.</p>
+    </div>
+    <nav aria-label="Footer">
+      <h2 class="footer-title">Explore</h2>
+      <ul>
+        <li><a href="#ask">Ask the agent</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#transparency">Transparency</a></li>
+        <li><a href="#data">Open data</a></li>
+        <li><a href="#accessibility">Accessibility</a></li>
+      </ul>
+    </nav>
+    <div>
+      <h2 class="footer-title">Project</h2>
+      <ul>
+        <li><a href="https://github.com/t20071/ai_dpi_cdpi" rel="noopener">Source code on GitHub</a></li>
+        <li><a href="https://github.com/t20071/ai_dpi_cdpi/blob/main/data/README.md" rel="noopener">Data dictionary</a></li>
+        <li><a href="https://github.com/t20071/ai_dpi_cdpi/blob/main/docs/PROJECT_REPORT.md" rel="noopener">Project report</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <p>Prototype on synthetic data. Not an official government service.</p>
+      <p id="footer-version">DPI Public Agent</p>
+    </div>
+  </div>
+</footer>
+
+<dialog class="dialog" id="record-dialog" aria-labelledby="dialog-title">
+  <div class="dialog-head">
+    <h2 id="dialog-title">Record</h2>
+    <button type="button" class="btn btn--icon" id="dialog-close" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <pre class="dialog-body" id="dialog-body" tabindex="0"></pre>
+</dialog>
+</body>
+</html>

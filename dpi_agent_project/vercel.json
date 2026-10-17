@@ -5,7 +5,7 @@
   "functions": {
     "api/index.py": {
       "maxDuration": 30,
-      "excludeFiles": "{.github/**,docs/**,screenshots/**,tests/**,scripts/**,evals/**,public/**,data/runtime/**,**/__pycache__/**}"
+      "excludeFiles": "{.github/**,dpi_agent_project/**,docs/**,screenshots/**,tests/**,scripts/**,evals/**,public/**,data/runtime/**,**/__pycache__/**}"
     }
   },
   "rewrites": [

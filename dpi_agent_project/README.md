@@ -116,10 +116,14 @@ Commands are shown for **Windows PowerShell**; macOS/Linux differences are noted
 
 ```powershell
 git clone https://github.com/t20071/ai_dpi_cdpi.git
-cd ai_dpi_cdpi\dpi_agent_project     # the project lives in this folder
+cd ai_dpi_cdpi
 ```
 
-Every command below runs from inside `dpi_agent_project/`.
+Every command below runs from the repository root (`ai_dpi_cdpi/`).
+
+> `dpi_agent_project/` is an identical copy of the project, kept so that older links to that
+> folder still work. Work in the root; `python scripts/sync_copy.py` updates the copy (see
+> [Project structure](#project-structure)).
 
 ### 3. Create a virtual environment and install
 
@@ -261,9 +265,10 @@ Browser ──> Vercel CDN ── public/  (index.html, assets/)
 
 ### What to push, and from which folder
 
-Push the **whole repository** to GitHub as usual. On Vercel, set the **Root Directory** to
-`dpi_agent_project`: the folder that contains `vercel.json`. Do not point Vercel at the
-repository root, `src/` or `public/`; `vercel.json` tells Vercel where everything else is.
+Push the **whole repository** to GitHub as usual. On Vercel the **Root Directory** stays `./`
+(the repository root, which contains `vercel.json`). Do not point Vercel at `src/` or
+`public/`; `vercel.json` tells Vercel where everything else is. (Pointing it at
+`dpi_agent_project` also works, because that folder is an identical copy.)
 
 ### Steps (Git + Vercel dashboard)
 
@@ -279,8 +284,8 @@ repository root, `src/` or `public/`; `vercel.json` tells Vercel where everythin
 2. **Import the project.** Sign in at <https://vercel.com> (the Hobby plan is free for personal,
    non-commercial projects). Choose *Add New… → Project*, then pick the `ai_dpi_cdpi` GitHub
    repository and *Import*.
-3. **Set the Root Directory**, and leave the rest to `vercel.json`:
-   - **Root Directory**: click *Edit* and choose `dpi_agent_project` (**required**)
+3. **Leave the build settings alone.** `vercel.json` sets everything:
+   - **Root Directory**: `./`
    - **Framework Preset**: *Other*
    - **Build/Output settings**: no build command; output directory `public`
 4. **Add environment variables** under *Environment Variables*, before the first deploy:
@@ -301,7 +306,7 @@ redeploy** (*Deployments → ⋯ → Redeploy*).
 
 ### Alternative: Vercel CLI
 
-Run these from inside `dpi_agent_project/`:
+Run these from the repository root:
 
 ```powershell
 npm install -g vercel
@@ -446,12 +451,12 @@ Latency depends on your hardware and Groq's load. Full per-case reports are save
 
 ## Project structure
 
-The repository root holds only two things: a short `README.md` that points here, and
-`.github/workflows/ci.yml` (CI: lint, tests and offline eval on Windows and Linux; GitHub only
-reads workflows from the root). Everything else is in `dpi_agent_project/`:
-
 ```text
-dpi_agent_project/
+ai_dpi_cdpi/
+├── .github/workflows/ci.yml   CI: lint, tests, offline eval and copy check on Windows and Linux
+├── dpi_agent_project/         Identical copy of everything below (except .github/), kept so
+│                              older links to this folder work. Never edit it by hand:
+│                              run `python scripts/sync_copy.py` instead
 ├── .env.example               Every setting with its default; copy to .env (git-ignored)
 ├── .gitignore
 ├── .vercelignore              Files Vercel must never upload (.env, .venv, ...)
@@ -491,6 +496,7 @@ dpi_agent_project/
 ├── scripts/                   Helpers, not part of the app
 │   ├── analyze_data.py        Finds suitable citizens for the demo scenarios
 │   ├── build_docx_report.py   Regenerates docs/PROJECT_REPORT.docx (needs .[report])
+│   ├── sync_copy.py           Mirrors the project into dpi_agent_project/ (--check: verify only)
 │   └── take_screenshots.py    Regenerates screenshots/ (needs .[screenshots])
 │
 ├── src/dpi_agent/             The application (an installable Python package)
@@ -560,7 +566,8 @@ ruff format src tests scripts api
 
 Tests never touch `data/runtime/` and never call Groq unless you ask. `tests/conftest.py` sends
 the database and logs to a temporary folder, blanks `GROQ_API_KEY` and pins every setting,
-including the consent clock. CI (`.github/workflows/ci.yml` at the repository root) runs lint, tests and
+including the consent clock. CI (`.github/workflows/ci.yml`) checks that `dpi_agent_project/`
+matches the root, then runs lint, tests and
 `dpi-agent eval --offline` on Windows and Linux with Python 3.11 and 3.13.
 
 To regenerate the screenshots:
@@ -660,7 +667,8 @@ officer.
 | `groq rate limit reached` | Free-tier limit hit. Wait a minute, lower `RATE_LIMIT_PER_MINUTE`, or use the rules |
 | `Ollama model 'X' is not installed` | `ollama pull X`, or set `OLLAMA_MODEL=auto` |
 | First local request is slow | Ollama loads the model into memory on first use. `OLLAMA_KEEP_ALIVE` keeps it loaded afterwards |
-| Vercel: 404 on every page, or `/api/...` returns 404 | Set the project's Root Directory to `dpi_agent_project` (*Settings → Build and Deployment*), then redeploy |
+| Vercel: 404 on every page, or `/api/...` returns 404 | Check that the Root Directory is `./` (*Settings → Build and Deployment*) and `vercel.json` is committed, then redeploy |
+| CI fails at "Check the dpi_agent_project copy" | You changed a file in the root but not the copy: run `python scripts/sync_copy.py` and commit |
 | Vercel: env var change has no effect | Redeploy: environment changes only apply to new deployments |
 | Port 8000 is in use | `dpi-agent serve --port 8080` |
 | Many requests go to an officer | Expected with a very small model. Run `dpi-agent eval` and try a larger one |

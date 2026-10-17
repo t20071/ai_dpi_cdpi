@@ -1,8 +1,27 @@
-# The project's own rules are in dpi_agent_project/.gitignore.
-# These guard the repository root in case a file lands here by mistake.
-.env
-.env.*
-!.env.example
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+
+# Virtual / conda environments (recreate locally, never commit)
 .venv/
 venv/
-__pycache__/
+env/
+CDPI_env/
+
+# Local configuration
+.env
+
+# Everything the app writes at run time (database, audit logs, eval reports)
+data/runtime/
+
+# Office lock files and OS clutter
+~$*
+.DS_Store
+Thumbs.db

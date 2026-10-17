@@ -1,0 +1,22 @@
+# Files Vercel must never upload or deploy.
+# The Vercel CLI does not read .gitignore, so secrets are listed here too.
+.env
+.env.local
+.venv/
+venv/
+CDPI_env/
+data/runtime/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Not needed by the website or the API function
+docs/
+screenshots/
+tests/
+scripts/
+evals/
+.github/
+dpi_agent_project/
