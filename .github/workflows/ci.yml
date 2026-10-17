@@ -8,6 +8,10 @@ jobs:
   test:
     name: test (${{ matrix.os }}, Python ${{ matrix.python }})
     runs-on: ${{ matrix.os }}
+    # The project lives in dpi_agent_project/; .github/ must stay at the repository root
+    defaults:
+      run:
+        working-directory: dpi_agent_project
     strategy:
       fail-fast: false
       matrix:
